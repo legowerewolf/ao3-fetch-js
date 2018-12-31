@@ -1,0 +1,19 @@
+{
+  "name": "ao3-fetch",
+  "version": "1.0.0",
+  "description": "CLI tool to fetch works from AO3.org",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/legowerewolf/ao3-fetch-js.git"
+  },
+  "author": "legowerewolf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/legowerewolf/ao3-fetch-js/issues"
+  },
+  "homepage": "https://github.com/legowerewolf/ao3-fetch-js#readme"
+}
