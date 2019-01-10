@@ -15,5 +15,24 @@
   "bugs": {
     "url": "https://github.com/legowerewolf/ao3-fetch-js/issues"
   },
-  "homepage": "https://github.com/legowerewolf/ao3-fetch-js#readme"
+  "homepage": "https://github.com/legowerewolf/ao3-fetch-js#readme",
+  "devDependencies": {
+    "@types/inquirer": "0.0.43",
+    "@types/lodash": "^4.14.119",
+    "@types/node-fetch": "^2.1.4",
+    "@types/request": "^2.48.1",
+    "@types/request-promise-native": "^1.0.15",
+    "@types/vorpal": "^1.11.0",
+    "gulp": "^4.0.0",
+    "gulp-typescript": "^5.0.0",
+    "legowerewolf-prefixer": "^2.1.0",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "inquirer": "^6.2.1",
+    "lodash": "^4.17.11",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "vorpal": "^1.12.0"
+  }
 }
