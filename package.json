@@ -18,7 +18,7 @@
   "homepage": "https://github.com/legowerewolf/ao3-fetch-js#readme",
   "devDependencies": {
     "@types/inquirer": "0.0.43",
-    "@types/lodash": "^4.14.119",
+    "@types/lodash": "^4.14.120",
     "@types/node-fetch": "^2.1.4",
     "@types/request": "^2.48.1",
     "@types/request-promise-native": "^1.0.15",
