@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/inquirer": "0.0.43",
     "@types/lodash": "^4.14.119",
-    "@types/node-fetch": "^2.1.4",
+    "@types/node-fetch": "^2.1.6",
     "@types/request": "^2.48.1",
     "@types/request-promise-native": "^1.0.15",
     "@types/vorpal": "^1.11.0",
