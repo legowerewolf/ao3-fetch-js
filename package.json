@@ -24,7 +24,7 @@
     "@types/request-promise-native": "^1.0.15",
     "@types/vorpal": "^1.11.0",
     "gulp": "^4.0.0",
-    "gulp-typescript": "^5.0.0",
+    "gulp-typescript": "^5.0.1",
     "legowerewolf-prefixer": "^2.1.0",
     "typescript": "^3.3.3333"
   },
