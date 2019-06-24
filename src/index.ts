@@ -1,88 +1,113 @@
-import inquirer = require("inquirer");
-import curry = require("lodash/fp/curry");
+import * as program from "commander";
+import { promises } from "fs";
+import { prompt } from "inquirer";
+import * as ora from "ora";
+import { homedir } from "os";
+import { join } from "path";
 import { AO3 } from "./ao3";
+import { Config } from "./types";
+import request = require("request");
 
-const is = curry((option: string, value: any, answers: any) => answers[option] === value)
+const configPath = join(homedir(), ".ao3");
 
-const menuIs = is("main-menu")
+promises
+	.readFile(configPath)
+	.then(
+		(fileContents) => JSON.parse(fileContents.toString()),
+		() => {
+			return {};
+		}
+	)
+	.then((config: Config) => {
+		let client = new AO3(config.session);
 
-const multi = (...predicates: any[]) => (answers: any) => predicates.reduce((a: boolean, p: Function) => p(answers) && a, true);
+		program
+			.command("login")
+			.description("log in with AO3 credentials")
+			.action(() => {
+				prompt([
+					{
+						name: "username",
+						type: "input",
+						message: "Username:",
+					},
+					{
+						name: "password",
+						type: "password",
+						message: "Password:",
+					},
+					{
+						name: "TOSdate",
+						type: "input",
+						message: "Last AO3 TOS update date: (YYYYMMDD/where/why)",
+						validate: (input) => {
+							switch (input) {
+								case "where":
+									return "You can find the AO3 Terms of Service at https://archiveofourown.org/tos.";
+								case "why":
+									return "The AO3 API won't respond without the user accepting the latest Terms of Service.";
+								default:
+									return true; // figure out how to validate the date
+							}
+						},
+					},
+				]).then((responses: any) => {
+					let spinner = ora("Logging in...").start();
+					client
+						.login(responses.username, responses.password, responses.TOSdate)
+						.then((name) => {
+							spinner.succeed(`Logged in as ${name}`);
+						})
+						.catch((reason) => {
+							spinner.fail();
+							console.error(reason);
+						})
+						.finally(() => {
+							done();
+						});
+				});
+			});
 
-const passwordTransformer = (input: string) => "*".repeat(input.length);
+		program
+			.command("logout")
+			.description("delete stored AO3 session")
+			.action(() => {
+				prompt([
+					{
+						name: "confirmLogout",
+						type: "confirm",
+						message: "Are you sure you wish to sign out of AO3?",
+					},
+				]).then((responses: any) => {
+					if (responses.confirmLogout) {
+						client.cookieJar = undefined;
+						done();
+					}
+				});
+			});
 
-let globals = {
-    session: new AO3()
-};
+		program
+			.command("whoami")
+			.description("check who's currently signed in")
+			.action(() => {
+				client.username;
+				done();
+			});
 
-async function main() {
+		program.parse(process.argv);
 
-    inquirer.prompt([
-        {
-            name: "main-menu",
-            type: "list",
-            message: "Select an option:",
-            choices: [
-                "view works list",
-                new inquirer.Separator(),
-                "login",
-                "logout",
-                "exit"
-            ]
-        },
-        {
-            name: "works-view",
-            type: "input",
-            message: "Enter the page of works to crawl:",
-            when: menuIs("view works list")
-        },
-        {
-            name: "username",
-            type: "input",
-            message: "Username:",
-            when: menuIs("login")
-        },
-        {
-            name: "password",
-            type: "input",
-            message: "Password:",
-            when: menuIs("login"),
-            transformer: passwordTransformer
-        },
-        {
-            name: "tosVersion",
-            type: "input",
-            message: "AO3 TOS revision date (YYYYMMDD):",
-            when: menuIs('login')
-        }
-    ])
-        .then((values: any) => {
-            return Promise.resolve(
-                [
-                    {
-                        predicate: menuIs("login"),
-                        handler: (answers: any) => {
-                            console.log("Attempting to log in...");
-                            return globals.session.login(answers.username, answers.password, answers.tosVersion)
-                                .then((username) => {
-                                    if (globals.session.isLoggedIn) console.log(`Logged in as ${username}`);
-                                    else console.log("Error logging in. Please try again.");
-                                })
-                        }
-                    },
-                    {
-                        predicate: menuIs("logout"),
-                        handler: () => {
-                            globals.session = new AO3();
-                            console.log("Logged out.");
-                        }
-                    },
-                    {
-                        predicate: menuIs("exit"),
-                        handler: () => { process.exit(0); }
-                    }
-                ].find((element) => element.predicate(values)).handler(values))
-        })
-        .then(() => { main(); })
-}
+		function done() {
+			let spinner = ora("Saving status...").start();
 
-main();
+			config.session = client.cookieJar;
+
+			promises.writeFile(configPath, Buffer.from(JSON.stringify(config))).then(
+				() => {
+					spinner.succeed("Saved!");
+				},
+				() => {
+					spinner.fail("Save failed. Oops!");
+				}
+			);
+		}
+	});
