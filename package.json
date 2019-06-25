@@ -1,5 +1,5 @@
 {
-	"name": "ao3-fetch-js",
+	"name": "ao3-fetch",
 	"version": "0.0.1",
 	"description": "CLI tool to fetch works from AO3.org",
 	"scripts": {
@@ -18,7 +18,6 @@
 		"url": "git+https://github.com/legowerewolf/ao3-fetch-js.git"
 	},
 	"author": "legowerewolf",
-	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/legowerewolf/ao3-fetch-js/issues"
 	},
@@ -39,5 +38,6 @@
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.7",
 		"tough-cookie": "^2.3.4"
-	}
+	},
+	"license": "GPL-3.0-only"
 }
