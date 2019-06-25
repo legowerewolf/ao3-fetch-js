@@ -1,27 +1,32 @@
 import idx from "idx";
+import { CookieJar } from "request";
 import * as request from "request-promise-native";
+import { Cookie, CookieJar as ToughCookieJar } from "tough-cookie";
 
 const _idx = (root: any, path: string[]) => path.reduce((o: any, prop: string) => (o == undefined ? o : o[prop]), root);
 
 export class AO3 {
-	cookieJar: any;
+	cookieJar: CookieJar = request.jar();
 
-	constructor(jar: any = request.jar()) {
-		this.cookieJar = jar;
-		console.log(jar);
+	constructor(jar: ToughCookieJar.Serialized = null) {
+		if (jar) {
+			(this.cookieJar as any)._jar = ToughCookieJar.deserializeSync(jar);
+		}
 	}
 
 	login(username: string, password: string, tosVersion: string) {
-		this.cookieJar.setCookie(request.cookie(`accepted_tos=${tosVersion}`), "https://archiveofourown.org");
+		this.cookieJar.setCookie(Cookie.parse(`accepted_tos=${tosVersion}`), "https://archiveofourown.org");
 
 		return request
-			.get("https://archiveofourown.org/token_dispenser.json", {
+			.get({
+				uri: "https://archiveofourown.org/token_dispenser.json",
 				jar: this.cookieJar,
 			})
 			.then((resp) => JSON.parse(resp))
 			.then((json) => json.token)
 			.then((token) => {
-				return request.post("https://archiveofourown.org/users/login", {
+				return request.post({
+					uri: "https://archiveofourown.org/users/login",
 					jar: this.cookieJar,
 					formData: {
 						utf8: "✓",
@@ -43,16 +48,16 @@ export class AO3 {
 			});
 	}
 
-	get username() {
-		request
-			.get("https://archiveofourown.org", {
+	get username(): Promise<String> {
+		return request
+			.get({
+				uri: "https://archiveofourown.org",
 				jar: this.cookieJar,
 			})
-			.then((data) => {
-				console.log(data);
-				console.log(this.cookieJar);
+			.then((data: string) => {
+				let matches = data.match(/<li><a href="\/users\/(\w+)">My Dashboard<\/a><\/li>/);
+				return matches ? matches[1] : "";
 			});
-		return null;
 	}
 
 	get isLoggedIn() {

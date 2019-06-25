@@ -4,20 +4,20 @@ import { prompt } from "inquirer";
 import * as ora from "ora";
 import { homedir } from "os";
 import { join } from "path";
+import { CookieJar } from "tough-cookie";
 import { AO3 } from "./ao3";
 import { Config } from "./types";
 import request = require("request");
+import cliSpinners = require("cli-spinners");
 
 const configPath = join(homedir(), ".ao3");
 
 promises
 	.readFile(configPath)
-	.then(
-		(fileContents) => JSON.parse(fileContents.toString()),
-		() => {
-			return {};
-		}
-	)
+	.then((fileContents) => JSON.parse(fileContents.toString()))
+	.catch(() => {
+		return {};
+	})
 	.then((config: Config) => {
 		let client = new AO3(config.session);
 
@@ -62,9 +62,7 @@ promises
 							spinner.fail();
 							console.error(reason);
 						})
-						.finally(() => {
-							done();
-						});
+						.finally(done);
 				});
 			});
 
@@ -78,20 +76,29 @@ promises
 						type: "confirm",
 						message: "Are you sure you wish to sign out of AO3?",
 					},
-				]).then((responses: any) => {
-					if (responses.confirmLogout) {
-						client.cookieJar = undefined;
-						done();
-					}
-				});
+				])
+					.then((responses: any) => {
+						if (responses.confirmLogout) {
+							client.cookieJar = request.jar();
+						}
+					})
+					.finally(done);
 			});
 
 		program
 			.command("whoami")
 			.description("check who's currently signed in")
 			.action(() => {
-				client.username;
-				done();
+				let spinner = ora("Checking who's logged in...").start();
+				client.username
+					.then((username: String) => {
+						if (username.length > 0) spinner.succeed(`You are signed in as ${username}.`);
+						else spinner.succeed("You are not signed in.");
+					})
+					.catch(() => {
+						spinner.fail();
+					})
+					.finally(done);
 			});
 
 		program.parse(process.argv);
@@ -99,7 +106,7 @@ promises
 		function done() {
 			let spinner = ora("Saving status...").start();
 
-			config.session = client.cookieJar;
+			config.session = ((client.cookieJar as any)._jar as CookieJar).serializeSync();
 
 			promises.writeFile(configPath, Buffer.from(JSON.stringify(config))).then(
 				() => {

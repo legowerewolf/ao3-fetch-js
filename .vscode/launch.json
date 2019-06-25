@@ -9,9 +9,18 @@
 			"request": "launch",
 			"name": "Launch Program",
 			"program": "${workspaceFolder}\\bin.js",
-			"args": ["login"],
+			"args": ["${input:commandToRun}"],
 			"outFiles": ["${workspaceFolder}/**/*.js"],
-			"console": "integratedTerminal"
+			"console": "integratedTerminal",
+			"preLaunchTask": "npm: build"
+		}
+	],
+	"inputs": [
+		{
+			"id": "commandToRun",
+			"type": "pickString",
+			"options": ["login", "logout", "whoami"],
+			"description": "Which subcommand to run"
 		}
 	]
 }
