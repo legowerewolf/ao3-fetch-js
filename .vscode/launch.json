@@ -7,7 +7,7 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch Program",
+			"name": "bin.js",
 			"program": "${workspaceFolder}\\bin.js",
 			"args": ["${input:commandToRun}"],
 			"outFiles": ["${workspaceFolder}/**/*.js"],

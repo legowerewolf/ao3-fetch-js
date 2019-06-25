@@ -104,16 +104,16 @@ promises
 		program.parse(process.argv);
 
 		function done() {
-			let spinner = ora("Saving status...").start();
+			let spinner = ora("Saving session status...").start();
 
 			config.session = ((client.cookieJar as any)._jar as CookieJar).serializeSync();
 
 			promises.writeFile(configPath, Buffer.from(JSON.stringify(config))).then(
 				() => {
-					spinner.succeed("Saved!");
+					spinner.succeed("Session saved!");
 				},
 				() => {
-					spinner.fail("Save failed. Oops!");
+					spinner.fail("Save failed. You may have to log in again.");
 				}
 			);
 		}
