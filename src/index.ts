@@ -8,7 +8,6 @@ import { CookieJar } from "tough-cookie";
 import { AO3 } from "./ao3";
 import { Config } from "./types";
 import request = require("request");
-import cliSpinners = require("cli-spinners");
 
 const configPath = join(homedir(), ".ao3");
 
