@@ -19,7 +19,7 @@
 		{
 			"id": "commandToRun",
 			"type": "pickString",
-			"options": ["login", "logout", "whoami"],
+			"options": ["login", "logout", "whoami", "listworks"],
 			"description": "Which subcommand to run"
 		}
 	]

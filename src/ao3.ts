@@ -1,4 +1,3 @@
-import idx from "idx";
 import { CookieJar } from "request";
 import * as request from "request-promise-native";
 import { Cookie, CookieJar as ToughCookieJar } from "tough-cookie";
@@ -14,7 +13,7 @@ export class AO3 {
 		}
 	}
 
-	login(username: string, password: string, tosVersion: string) {
+	login(username: string, password: string, tosVersion: string): Promise<string> {
 		this.cookieJar.setCookie(Cookie.parse(`accepted_tos=${tosVersion}`), "https://archiveofourown.org");
 
 		return request
@@ -43,12 +42,27 @@ export class AO3 {
 					simple: false,
 				});
 			})
-			.then((response) => {
-				return String(response.headers.location).match(/[^\/]+$/)[0];
+			.then(() => {
+				return this.username;
 			});
 	}
 
-	get username(): Promise<String> {
+	page(url: string) {
+		return request.get({
+			uri: url,
+			jar: this.cookieJar,
+		});
+	}
+
+	worksInList(listpage: string) {
+		this.page(listpage).then((source: string) => {
+			let matches = source.match(/<a href="\S*">(\d+)<\/a>/g);
+			let last = matches[matches.length - 1].match(/<a href="\S*">(\d+)<\/a>/)[1];
+			console.log(last);
+		});
+	}
+
+	get username(): Promise<string> {
 		return request
 			.get({
 				uri: "https://archiveofourown.org",
@@ -60,8 +74,7 @@ export class AO3 {
 			});
 	}
 
-	get isLoggedIn() {
-		//return _idx(this.cookieJar, ["_jar", "store", "idx", "archiveofourown.org", "/", "user_credentials"]) != undefined;
-		return idx(this.cookieJar, (_: any) => _._jar.store.idx["archiveofourown.org"]["/"].user_credentials) != undefined;
+	get isLoggedIn(): Promise<boolean> {
+		return this.username.then((name) => name != "");
 	}
 }

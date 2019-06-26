@@ -100,6 +100,13 @@ promises
 					.finally(done);
 			});
 
+		program
+			.command("listworks")
+			.description("list works from a paginated view")
+			.action(() => {
+				client.worksInList("https://archiveofourown.org/tags/Derek%20Hale*s*Stiles%20Stilinski/works");
+			});
+
 		program.parse(process.argv);
 
 		function done() {
