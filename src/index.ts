@@ -42,7 +42,7 @@ promises
 						validate: (input) => {
 							switch (input) {
 								case "where":
-									return "You can find the AO3 Terms of Service at https://archiveofourown.org/tos.";
+									return "You can find the AO3 Terms of Service at https://archiveofourown.org/tos";
 								case "why":
 									return "The AO3 API won't respond without the user accepting the latest Terms of Service.";
 								default:
