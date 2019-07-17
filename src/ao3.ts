@@ -63,15 +63,10 @@ export class AO3 {
 	}
 
 	get username(): Promise<string> {
-		return request
-			.get({
-				uri: "https://archiveofourown.org",
-				jar: this.cookieJar,
-			})
-			.then((data: string) => {
-				let matches = data.match(/<li><a href="\/users\/(\w+)">My Dashboard<\/a><\/li>/);
-				return matches ? matches[1] : "";
-			});
+		return this.page("https://archiveofourown.org").then((data: string) => {
+			let matches = data.match(/<li><a href="\/users\/(\w+)">My Dashboard<\/a><\/li>/);
+			return matches ? matches[1] : "";
+		});
 	}
 
 	get isLoggedIn(): Promise<boolean> {
