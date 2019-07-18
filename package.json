@@ -37,7 +37,7 @@
 		"ora": "^3.4.0",
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.7",
-		"tough-cookie": "^2.3.4"
+		"tough-cookie": "^3.0.1"
 	},
 	"license": "GPL-3.0-only"
 }
