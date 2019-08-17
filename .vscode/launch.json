@@ -12,7 +12,7 @@
 			"args": ["${input:commandToRun}"],
 			"outFiles": ["${workspaceFolder}/**/*.js"],
 			"console": "integratedTerminal",
-			"preLaunchTask": "npm: build"
+			"preLaunchTask": "npm: install"
 		}
 	],
 	"inputs": [
