@@ -1,6 +1,8 @@
+import { load } from "cheerio";
 import { CookieJar } from "request";
 import * as request from "request-promise-native";
 import { Cookie, CookieJar as ToughCookieJar } from "tough-cookie";
+import { URLSearchParams } from "url";
 
 const _idx = (root: any, path: string[]) => path.reduce((o: any, prop: string) => (o == undefined ? o : o[prop]), root);
 
@@ -54,11 +56,16 @@ export class AO3 {
 		});
 	}
 
-	worksInList(listpage: string) {
-		this.page(listpage).then((source: string) => {
-			let matches = source.match(/<a href="\S*">(\d+)<\/a>/g);
-			let last = matches[matches.length - 1].match(/<a href="\S*">(\d+)<\/a>/)[1];
-			console.log(last);
+	pagesInList(listpage: string) {
+		return this.page(listpage).then((source: string) => {
+			let parsedPage = load(source);
+			let navigationNumbers = parsedPage("li a[href*='page']")
+				.toArray()
+				.map((elem) => elem.attribs.href)
+				.map((url) => new URLSearchParams(url.replace(/.*\?/, "")))
+				.map((params) => +params.get("page")) // unary + converts to number
+				.reduce((accum, curr) => (accum.includes(curr) ? accum : [...accum, curr]), []); // Strip duplicates
+			return navigationNumbers.reduce((prev, cur) => (cur > prev ? cur : prev), 0);
 		});
 	}
 
