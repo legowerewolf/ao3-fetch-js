@@ -104,7 +104,18 @@ promises
 			.command("listworks")
 			.description("list works from a paginated view")
 			.action(() => {
-				client.worksInList("https://archiveofourown.org/tags/Derek%20Hale*s*Stiles%20Stilinski/works");
+				prompt([
+					{
+						name: "listurl",
+						type: "input",
+						message: "What list do you want to crawl? (URL)",
+					},
+				]).then(async (responses: any) => {
+					let spinner = ora("Crawling: getting page count...").start();
+					let pagecount = await client.pagesInList(responses.listurl);
+					spinner.info(`Pages: ${pagecount}`);
+					spinner.succeed("Done!");
+				});
 			});
 
 		program.parse(process.argv);
