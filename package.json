@@ -35,7 +35,7 @@
 		"cheerio": "^1.0.0-rc.3",
 		"commander": "^3.0.0",
 		"idx": "^2.5.6",
-		"inquirer": "^6.5.1",
+		"inquirer": "^7.0.0",
 		"ora": "^3.4.0",
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.7",
