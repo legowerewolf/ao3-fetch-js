@@ -36,7 +36,7 @@
 		"commander": "^3.0.0",
 		"idx": "^2.5.6",
 		"inquirer": "^7.0.0",
-		"ora": "^3.4.0",
+		"ora": "^4.0.0",
 		"request": "^2.88.0",
 		"request-promise-native": "^1.0.7",
 		"tough-cookie": "^3.0.1"
