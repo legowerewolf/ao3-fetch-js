@@ -23,7 +23,7 @@
 	},
 	"homepage": "https://github.com/legowerewolf/ao3-fetch-js#readme",
 	"devDependencies": {
-		"@types/cheerio": "^0.22.13",
+		"@types/cheerio": "^0.22.14",
 		"@types/commander": "^2.12.2",
 		"@types/node": "^12.11.7",
 		"@types/request-promise-native": "^1.0.17",
