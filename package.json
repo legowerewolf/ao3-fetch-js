@@ -1,6 +1,6 @@
 {
 	"name": "ao3-fetch",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "CLI tool to fetch works from AO3.org",
 	"scripts": {
 		"prepare": "npm run build",
