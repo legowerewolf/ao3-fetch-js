@@ -5,7 +5,7 @@ import * as ora from "ora";
 import { homedir } from "os";
 import { join } from "path";
 import { CookieJar } from "tough-cookie";
-import { AO3 } from "./ao3";
+import { AO3 } from "./ao3.old";
 import { Config } from "./types";
 import request = require("request");
 
@@ -91,7 +91,8 @@ promises
 				let spinner = ora("Checking who's logged in...").start();
 				client.username
 					.then((username: String) => {
-						if (username.length > 0) spinner.succeed(`You are signed in as ${username}.`);
+						if (username.length > 0)
+							spinner.succeed(`You are signed in as ${username}.`);
 						else spinner.succeed("You are not signed in.");
 					})
 					.catch(() => {
@@ -123,7 +124,8 @@ promises
 		function done() {
 			let spinner = ora("Saving session status...").start();
 
-			config.session = ((client.cookieJar as any)._jar as CookieJar).serializeSync();
+			config.session = ((client.cookieJar as any)
+				._jar as CookieJar).serializeSync();
 
 			promises.writeFile(configPath, Buffer.from(JSON.stringify(config))).then(
 				() => {
