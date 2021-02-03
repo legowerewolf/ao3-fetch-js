@@ -25,7 +25,7 @@
 	"devDependencies": {
 		"@types/cheerio": "^0.22.13",
 		"@types/commander": "^2.12.2",
-		"@types/node": "^12.11.7",
+		"@types/node": "^14.14.24",
 		"@types/request-promise-native": "^1.0.17",
 		"@types/tough-cookie": "^2.3.5",
 		"typescript": "^3.6.4"
