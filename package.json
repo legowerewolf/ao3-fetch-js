@@ -33,7 +33,7 @@
 	"dependencies": {
 		"@types/inquirer": "^6.5.0",
 		"cheerio": "^1.0.0-rc.3",
-		"commander": "^3.0.2",
+		"commander": "^8.1.0",
 		"idx": "^2.5.6",
 		"inquirer": "^7.0.0",
 		"ora": "^3.4.0",
